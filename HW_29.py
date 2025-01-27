@@ -40,12 +40,29 @@ def quality(self, quality: int) -> None:
         if not (0 <= quality <= 100):
             raise ValueError("Качество должно быть в диапазоне от 0 до 100.")
         self.__quality = quality
+
+def process_input(self, input_path: str) -> None: # Добавляем метод process_input
+        """Обрабатывает входной путь и запускает сжатие изображений."""
+        input_path = input_path.strip('"') # Удаляем кавычки, если они есть
+
+        if os.path.exists(input_path):
+            if os.path.isfile(input_path):
+                print(f"Обрабатываем файл: {input_path}")
+                output_path = os.path.splitext(input_path)[0] + '.heic'
+                self.compress_image(input_path, output_path)
+            elif os.path.isdir(input_path):
+                print(f"Обрабатываем директорию: {input_path}")
+                self.process_directory(input_path)
+        else:
+            print("Указанный путь не существует")
+
+
 def main():
     register_heif_opener()
     user_input: str = input("Введите путь к файлу или директории: ")
 
     compressor = ImageCompressor() # Создание экземпляра класса
-    # Пока ничего не вызываем, только создаем экземпляр
+    compressor.process_input(user_input) # Вызываем метод process_input экземпляра
 
 if __name__ == "__main__":
     main()
