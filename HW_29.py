@@ -21,23 +21,14 @@ def compress_image(self, input_path: str, output_path: str) -> None:
     except Exception as e:
         print(f"Ошибка при сжатии {input_path}: {e}")
 
-def process_directory(directory: str) -> None:
-    """
-    Обрабатывает все изображения в указанной директории и её поддиректориях.
-
-    Args:
-        directory (str): Путь к директории для обработки.
-
-    Returns:
-        None
-    """
+def process_directory(self, directory: str) -> None:
+    """Обрабатывает все изображения в указанной директории и её поддиректориях."""
     for root, _, files in os.walk(directory):
         for file in files:
-            # Проверяем расширение файла
-            if file.lower().endswith(('.jpg', '.jpeg', '.png')):
+            if file.lower().endswith(self.supported_formats):
                 input_path = os.path.join(root, file)
                 output_path = os.path.splitext(input_path)[0] + '.heic'
-                compress_image(input_path, output_path)
+                self.compress_image(input_path, output_path) # Вызываем метод compress_image класса
 @property
 def quality(self) -> int:
         """Геттер для получения значения качества сжатия."""
