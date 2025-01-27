@@ -12,23 +12,14 @@ def __init__(self, quality: int = 50):
         """Инициализация класса с заданным качеством сжатия."""
         self.__quality = quality
 
-def compress_image(input_path: str, output_path: str) -> None:
-    
-    """
-    Сжимает изображение и сохраняет его в формате HEIF.
-
-    Args:
-        input_path (str): Путь к исходному изображению.
-        output_path (str): Путь для сохранения сжатого изображения.
-
-    Returns:
-        None
-        
-    """
-
-    with Image.open(input_path) as img:
-        img.save(output_path, "HEIF", quality=QUALITY)
-    print(f"Сжато: {input_path} -> {output_path}")
+def compress_image(self, input_path: str, output_path: str) -> None:
+    """Сжимает изображение и сохраняет его в формате HEIF."""
+    try:
+        with Image.open(input_path) as img:
+            img.save(output_path, "HEIF", quality=self.__quality) # Используем self.__quality
+        print(f"Сжато: {input_path} -> {output_path}")
+    except Exception as e:
+        print(f"Ошибка при сжатии {input_path}: {e}")
 
 def process_directory(directory: str) -> None:
     """
