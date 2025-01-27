@@ -3,9 +3,17 @@ from typing import Union
 from PIL import Image
 from pillow_heif import register_heif_opener
 
-QUALITY: int = 50  # Можно настроить качество сжатия
+class ImageCompressor:
+    """Класс для сжатия изображений в формате HEIF."""
+
+    supported_formats = ('.jpg', '.jpeg', '.png') # Поддерживаемые форматы файлов
+
+def __init__(self, quality: int = 50):
+        """Инициализация класса с заданным качеством сжатия."""
+        self.__quality = quality
 
 def compress_image(input_path: str, output_path: str) -> None:
+    
     """
     Сжимает изображение и сохраняет его в формате HEIF.
 
@@ -15,7 +23,9 @@ def compress_image(input_path: str, output_path: str) -> None:
 
     Returns:
         None
+        
     """
+
     with Image.open(input_path) as img:
         img.save(output_path, "HEIF", quality=QUALITY)
     print(f"Сжато: {input_path} -> {output_path}")
@@ -37,35 +47,23 @@ def process_directory(directory: str) -> None:
                 input_path = os.path.join(root, file)
                 output_path = os.path.splitext(input_path)[0] + '.heic'
                 compress_image(input_path, output_path)
+@property
+def quality(self) -> int:
+        """Геттер для получения значения качества сжатия."""
+        return self.__quality
 
-def main(input_path: str) -> None:
-    """
-    Основная функция программы. Обрабатывает входной путь и запускает сжатие изображений.
-
-    Args:
-        input_path (str): Путь к файлу или директории для обработки.
-
-    Returns:
-        None
-    """
+@quality.setter
+def quality(self, quality: int) -> None:
+        """Сеттер для установки значения качества сжатия."""
+        if not (0 <= quality <= 100):
+            raise ValueError("Качество должно быть в диапазоне от 0 до 100.")
+        self.__quality = quality
+def main():
     register_heif_opener()
-    input_path = input_path.strip('"')  # Удаляем кавычки, если они есть
-    
-    if os.path.exists(input_path):
-        if os.path.isfile(input_path):
-            # Если указан путь к файлу, обрабатываем только этот файл
-            print(f"Обрабатываем файл: {input_path}")
-            output_path = os.path.splitext(input_path)[0] + '.heic'
-            compress_image(input_path, output_path)
-        elif os.path.isdir(input_path):
-            # Если указан путь к директории, обрабатываем все файлы в ней
-            print(f"Обрабатываем директорию: {input_path}")
-            process_directory(input_path)
-            # Функция process_directory рекурсивно обойдет все поддиректории
-            # и обработает все поддерживаемые изображения
-    else:
-        print("Указанный путь не существует")
+    user_input: str = input("Введите путь к файлу или директории: ")
+
+    compressor = ImageCompressor() # Создание экземпляра класса
+    # Пока ничего не вызываем, только создаем экземпляр
 
 if __name__ == "__main__":
-    user_input: str = input("Введите путь к файлу или директории: ")
-    main(user_input)
+    main()
